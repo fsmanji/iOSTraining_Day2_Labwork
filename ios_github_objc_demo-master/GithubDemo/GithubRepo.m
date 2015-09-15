@@ -25,6 +25,7 @@ static NSString * const kClientSecret = nil;
     self.forks = [jsonResult[@"forks_count"] integerValue];
     self.ownerHandle = jsonResult[@"owner"][@"login"];
     self.ownerAvatarURL = jsonResult[@"owner"][@"avatar_url"];
+    self.repoDescription = jsonResult[@"description"];
 }
 
 + (void)fetchRepos:(GithubRepoSearchSettings *)settings successCallback:(void(^)(NSArray *))successCallback {

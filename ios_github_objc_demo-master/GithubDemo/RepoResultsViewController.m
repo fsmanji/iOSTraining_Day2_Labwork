@@ -33,12 +33,13 @@
     [GithubRepo fetchRepos:self.searchSettings successCallback:^(NSArray *repos) {
         for (GithubRepo *repo in repos) {
             NSLog(@"%@", [NSString stringWithFormat:
-                   @"Name:%@\n\tStars:%ld\n\tForks:%ld,Owner:%@\n\tAvatar:%@\n\t",
+                   @"Name:%@\n\tStars:%ld\n\tForks:%ld,Owner:%@\n\tAvatar:%@\n\tDescription:%@\n\t",
                           repo.name,
                           repo.stars,
                           repo.forks,
                           repo.ownerHandle,
-                          repo.ownerAvatarURL
+                          repo.ownerAvatarURL,
+                          repo.repoDescription
                    ]);
         }
         [MBProgressHUD hideHUDForView:self.view animated:YES];
