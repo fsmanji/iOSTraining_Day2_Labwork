@@ -10,10 +10,13 @@
 #import "MBProgressHUD.h"
 #import "GithubRepo.h"
 #import "GithubRepoSearchSettings.h"
+#import "GithubRepoCell.h"
 
 @interface RepoResultsViewController ()
+@property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (nonatomic, strong) UISearchBar *searchBar;
 @property (nonatomic, strong) GithubRepoSearchSettings *searchSettings;
+@property NSArray* searchResults;
 @end
 
 @implementation RepoResultsViewController
@@ -25,6 +28,13 @@
     self.searchBar.delegate = self;
     [self.searchBar sizeToFit];
     self.navigationItem.titleView = self.searchBar;
+    
+    
+    self.tableView.dataSource = self;
+    self.tableView.delegate = self;
+    self.tableView.estimatedRowHeight = 100;
+    self.tableView.rowHeight = UITableViewAutomaticDimension;
+    
     [self doSearch];
 }
 
@@ -41,6 +51,10 @@
                           repo.ownerAvatarURL,
                           repo.repoDescription
                    ]);
+            //save results
+            self.searchResults = repos;
+            [self.tableView reloadData];
+            
         }
         [MBProgressHUD hideHUDForView:self.view animated:YES];
     }];
@@ -66,6 +80,32 @@
     [searchBar resignFirstResponder];
     [self doSearch];
 }
+
+
+
+//Table view datasource
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return [self.searchResults count];
+}
+
+- (UITableViewCell* )tableView:(UITableView*)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    GithubRepoCell* cell = [self.tableView dequeueReusableCellWithIdentifier:@"com.yahoo.tablecell.github" forIndexPath:indexPath];
+    
+    [cell updateWithRepo:self.searchResults[indexPath.row]];
+
+    return cell;
+    
+}
+
+
+//delegates
+
+-(void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSLog(@"tapped row : %li", indexPath.row);
+    
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+}
+
 
 /*
 #pragma mark - Navigation
